@@ -126,10 +126,14 @@ function querySuggestionsMenuItems(
   editor: EditorType,
   query: string,
   macros: BlockNoteConcreteMacro[],
+  customItems: DefaultReactSuggestionItem[],
 ): DefaultReactSuggestionItem[] {
   return filterSuggestionItems(
     combineByGroup(
       getDefaultReactSlashMenuItems(editor),
+
+      // Custom items
+      customItems,
 
       // Block macros
       filterMap(macros, ({ bnRendering }) =>

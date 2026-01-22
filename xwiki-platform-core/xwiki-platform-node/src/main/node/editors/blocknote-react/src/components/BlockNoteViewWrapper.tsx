@@ -27,6 +27,7 @@ import {
   querySuggestionsMenuItems,
 } from "../blocknote";
 import "@blocknote/core/fonts/inter.css";
+import { useCustomSlashMenuItems } from "../blocknote/slashMenu";
 import { adaptMacroForBlockNote } from "../blocknote/utils";
 import { useTimeoutCheck } from "../hooks";
 import { BlockNoteView } from "@blocknote/mantine";
@@ -37,6 +38,7 @@ import {
   FormattingToolbarController,
   LinkToolbarController,
   SuggestionMenuController,
+  useComponentsContext,
   useCreateBlockNote,
 } from "@blocknote/react";
 import { MacrosAstToReactJsxConverter } from "@xwiki/platform-macros-ast-react-jsx";
@@ -213,7 +215,7 @@ const BlockNoteViewWrapper: React.FC<BlockNoteViewWrapperProps> = ({
   // Check if the syncing is happing for too long, in order to display an information message
   const longLoading = useTimeoutCheck(1000);
 
-  // Creates a new editor instance.
+  // Create a new editor instance
   const editor = useCreateBlockNote({
     ...blockNoteOptions,
     collaboration: initializer?.provider
@@ -233,6 +235,15 @@ const BlockNoteViewWrapper: React.FC<BlockNoteViewWrapperProps> = ({
       headers: true,
     },
   });
+
+  const Components = useComponentsContext();
+
+  // Set up the custom slash menu entries
+  const customSlashMenuItems = useCustomSlashMenuItems(
+    editor,
+    linkEditionCtx,
+    Components,
+  );
 
   useEffect(() => {
     setEditor?.(editor);
@@ -342,7 +353,12 @@ const BlockNoteViewWrapper: React.FC<BlockNoteViewWrapperProps> = ({
       <SuggestionMenuController
         triggerCharacter={"/"}
         getItems={async (query) =>
-          querySuggestionsMenuItems(editor, query, builtMacros)
+          querySuggestionsMenuItems(
+            editor,
+            query,
+            builtMacros,
+            customSlashMenuItems,
+          )
         }
       />
 

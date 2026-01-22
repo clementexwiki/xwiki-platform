@@ -23,7 +23,11 @@ import {
   createReactBlockSpec,
   createReactInlineContentSpec,
 } from "@blocknote/react";
-import { assertUnreachable, objectEntries } from "@xwiki/platform-fn-utils";
+import {
+  assertUnreachable,
+  objectEntries,
+  provideTypeInference,
+} from "@xwiki/platform-fn-utils";
 import type {
   BlockConfig,
   CustomInlineContentConfig,
@@ -39,6 +43,7 @@ import type {
   StyleSchema,
 } from "@blocknote/core";
 import type {
+  DefaultReactSuggestionItem,
   ReactCustomBlockImplementation,
   ReactInlineContentImplementation,
 } from "@blocknote/react";
@@ -77,7 +82,7 @@ function createCustomBlockSpec<
         title: string;
         aliases?: string[];
         group: string;
-        icon: ReactNode;
+        icon: JSX.Element;
         default: () => PartialBlockFromConfig<
           BlockConfig<Name, Props, InlineType>,
           InlineContentSchema,
@@ -138,7 +143,7 @@ function createCustomInlineContentSpec<
         title: string;
         aliases?: string[];
         group: string;
-        icon: ReactNode;
+        icon: JSX.Element;
         default: () => PartialInlineContent<Record<I["type"], I>, S>;
       };
   customToolbar: (() => ReactNode) | null;
@@ -149,18 +154,19 @@ function createCustomInlineContentSpec<
     slashMenuEntry: !slashMenu
       ? (false as const)
       : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (editor: BlockNoteEditor<any>) => ({
-          title: slashMenu.title,
-          aliases: slashMenu.aliases,
-          group: slashMenu.group,
-          icon: slashMenu.icon,
-          onItemClick: () => {
-            editor.insertInlineContent([
-              // @ts-expect-error: the AST is dynamically-typed with macros, so the types are incorrect here
-              slashMenu.default(),
-            ]);
-          },
-        }),
+        (editor: BlockNoteEditor<any>) =>
+          provideTypeInference<DefaultReactSuggestionItem>({
+            title: slashMenu.title,
+            aliases: slashMenu.aliases,
+            group: slashMenu.group,
+            icon: slashMenu.icon,
+            onItemClick: () => {
+              editor.insertInlineContent([
+                // @ts-expect-error: the AST is dynamically-typed with macros, so the types are incorrect here
+                slashMenu.default(),
+              ]);
+            },
+          }),
 
     customToolbar,
   };
@@ -265,7 +271,7 @@ function adaptMacroForBlockNote(
       ? {
           title: name,
           group: "Macros",
-          icon: "M",
+          icon: <>M</>,
           aliases: [],
           ...opts(() => ({
             // TODO: statically type parameters so that the `type` name cannot be used,

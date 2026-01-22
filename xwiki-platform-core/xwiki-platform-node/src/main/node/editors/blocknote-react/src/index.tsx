@@ -76,11 +76,7 @@ export type {
   InlineContentType,
 } from "./blocknote";
 
-export {
-  createBlockNoteSchema,
-  createDictionary,
-  querySuggestionsMenuItems,
-} from "./blocknote";
+export { createBlockNoteSchema, createDictionary } from "./blocknote";
 
 export type {
   createCustomBlockSpec,

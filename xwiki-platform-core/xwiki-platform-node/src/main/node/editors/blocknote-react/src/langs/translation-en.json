@@ -12,5 +12,6 @@
   "blocknote.linkEditor.placeholder": "Query or URL...",
   "blocknote.combobox.backendSearchUnsupported": "Search is not supported for the current backend",
   "blocknote.combobox.noResultFound": "No result found",
-  "blocknote.combobox.loadingSuggestions": "Loading suggestions..."
+  "blocknote.combobox.loadingSuggestions": "Loading suggestions...",
+  "blocknote.slashMenu.insertLink.label": "Link"
 }
