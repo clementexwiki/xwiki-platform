@@ -34,6 +34,7 @@ import { filterMap } from "@xwiki/platform-fn-utils";
 import type { BlockNoteConcreteMacro } from "./utils";
 import type { Block, InlineContent, Link, StyledText } from "@blocknote/core";
 import type { DefaultReactSuggestionItem } from "@blocknote/react";
+import type { ReactNode } from "react";
 
 /**
  * Create the BlockNote editor's schema
@@ -119,6 +120,8 @@ type EditorLanguage = keyof typeof locales & keyof typeof translations;
  * @param editor - the editor type
  * @param query - the query to filter the suggestions by
  * @param macros - the available macros
+ * @param additional - additional suggestion items
+ *
  * @since 18.0.0RC1
  * @beta
  */
@@ -126,6 +129,7 @@ function querySuggestionsMenuItems(
   editor: EditorType,
   query: string,
   macros: BlockNoteConcreteMacro[],
+  additional: FixedBlockNoteSuggestionItem[],
 ): DefaultReactSuggestionItem[] {
   return filterSuggestionItems(
     combineByGroup(
@@ -145,10 +149,22 @@ function querySuggestionsMenuItems(
           ? bnRendering.inlineContent.slashMenuEntry(editor)
           : null,
       ),
+
+      additional,
     ),
     query,
   );
 }
+
+/**
+ * BlockNote's `DefaultReactSuggestionItem` type is too narrow, so we extend it
+ *
+ * @since 18.1.0RC1
+ * @beta
+ */
+type FixedBlockNoteSuggestionItem = Omit<DefaultReactSuggestionItem, "icon"> & {
+  icon?: ReactNode;
+};
 
 /**
  * Schema of the BlockNote editor
@@ -280,6 +296,7 @@ export type {
   EditorStyleSchema,
   EditorStyledText,
   EditorType,
+  FixedBlockNoteSuggestionItem,
   InlineContentType,
 };
 

@@ -29,6 +29,7 @@ import {
 import "@blocknote/core/fonts/inter.css";
 import { adaptMacroForBlockNote } from "../blocknote/utils";
 import { useTimeoutCheck } from "../hooks";
+import { additionalQuickActions } from "../misc/quickActions";
 import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
 import {
@@ -342,7 +343,12 @@ const BlockNoteViewWrapper: React.FC<BlockNoteViewWrapperProps> = ({
       <SuggestionMenuController
         triggerCharacter={"/"}
         getItems={async (query) =>
-          querySuggestionsMenuItems(editor, query, builtMacros)
+          querySuggestionsMenuItems(
+            editor,
+            query,
+            builtMacros,
+            additionalQuickActions(t),
+          )
         }
       />
 
