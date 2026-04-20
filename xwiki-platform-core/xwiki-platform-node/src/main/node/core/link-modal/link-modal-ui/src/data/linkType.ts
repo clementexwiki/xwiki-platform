@@ -17,35 +17,49 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-import { ImageFilePanel } from "../images/ImageFilePanel";
-import type { EditorType } from "../../blocknote";
-import type { LinkEditionContext } from "../../misc/linkEditionCtx";
-import type React from "react";
+import type {
+  AttachmentReference,
+  DocumentReference,
+} from "@xwiki/platform-model-api";
 
-export type FilePanelProps = {
-  editor: EditorType;
-  blockId: string;
-  linkEditionCtx: LinkEditionContext;
+type LinkData = {
+  displayText: string;
+  newTab?: boolean;
+  target: LinkTarget;
 };
 
-export const FilePanel: React.FC<FilePanelProps> = ({
-  blockId,
-  editor,
-  linkEditionCtx,
-}) => {
-  const block = editor.getBlock(blockId);
+type LinkTarget =
+  | { type: "page"; config: LinkPageConfig }
+  | { type: "attachment"; config: LinkAttachmentConfig }
+  | { type: "url"; config: LinkUrlConfig }
+  | { type: "email"; config: LinkEmailConfig };
 
-  if (!block) {
-    throw new Error(
-      "Assertion failed: provided blockId was not found in editor (file panel)",
-    );
-  }
+type LinkPageConfig = {
+  ref: DocumentReference | null;
+  queryString?: string;
+  anchor?: string;
+};
 
-  if (block.type === "image") {
-    return (
-      <ImageFilePanel linkEditionCtx={linkEditionCtx} currentBlock={block} />
-    );
-  }
+type LinkAttachmentConfig = {
+  ref: AttachmentReference | null;
+  queryString?: string;
+};
 
-  throw new Error(`Assertion failed: unkown block type: ${block.type}`);
+type LinkUrlConfig = {
+  url: string;
+};
+
+type LinkEmailConfig = {
+  address: string;
+  messageSubject?: string;
+  messageBody?: string;
+};
+
+export type {
+  LinkAttachmentConfig,
+  LinkData,
+  LinkEmailConfig,
+  LinkPageConfig,
+  LinkTarget,
+  LinkUrlConfig,
 };

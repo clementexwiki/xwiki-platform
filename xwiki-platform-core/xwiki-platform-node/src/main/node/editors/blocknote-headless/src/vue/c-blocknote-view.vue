@@ -23,23 +23,31 @@ import { createLinkEditionContext } from "../components/linkEditionContext";
 import messages from "../translations";
 import { BlockNoteToUniAstConverter } from "../uniast/bn-to-uniast";
 import { UniAstToBlockNoteConverter } from "../uniast/uniast-to-bn";
+import { LinkModal, parseLinkTarget } from "@xwiki/link-modal-ui";
 import { mountBlockNote } from "@xwiki/platform-editors-blocknote-react";
 import { Container } from "inversify";
 import { debounce } from "lodash-es";
 import {
   onBeforeUnmount,
   onMounted,
+  onUnmounted,
   ref,
   shallowRef,
   toRaw,
   useTemplateRef,
 } from "vue";
 import { useI18n } from "vue-i18n";
-import type { Collaboration } from "@xwiki/platform-collaboration-api";
+import type { LinkData } from "@xwiki/link-modal-ui";
+import type { AuthenticationManagerProvider } from "@xwiki/platform-authentication-api";
+import type {
+  Collaboration,
+  CollaborationInitializer,
+} from "@xwiki/platform-collaboration-api";
 import type {
   BlockNoteViewWrapperProps,
   ContextForMacros,
   EditorType,
+  LinkEditionHandlerProps,
 } from "@xwiki/platform-editors-blocknote-react";
 import type { MacroWithUnknownParamsType } from "@xwiki/platform-macros-api";
 import type { UniAst } from "@xwiki/platform-uniast-api";
@@ -48,7 +56,11 @@ type Props = {
   /** Main properties for the BlockNote editor */
   editorProps: Omit<
     BlockNoteViewWrapperProps,
-    "content" | "linkEditionCtx" | "macroAstToReactJsxConverter" | "macros"
+    | "content"
+    | "linkEditionCtx"
+    | "linkEditionHandler"
+    | "macroAstToReactJsxConverter"
+    | "macros"
   >;
 
   /** Set to `false` to disable macros entirely */
@@ -123,6 +135,16 @@ const { t } = useI18n({
 // Create the link edition context
 const linkEditionCtx = createLinkEditionContext(container);
 
+function handleLinkEditorOutsideClick(e: MouseEvent) {
+  if (!editingLink.value || !linkModalContainer.value) {
+    return;
+  }
+
+  if (!e.composedPath().includes(linkModalContainer.value)) {
+    editingLink.value = null;
+  }
+}
+
 // Build the properties object for the React BlockNoteView component
 const initializedEditorProps: Omit<BlockNoteViewWrapperProps, "content"> = {
   ...editorProps,
@@ -141,6 +163,29 @@ const initializedEditorProps: Omit<BlockNoteViewWrapperProps, "content"> = {
       editorRef.value = editor;
     },
   },
+  linkEditionHandler: (props) => {
+    editingLink.value = props;
+  },
+};
+
+const submitEditedLink = ({
+  displayText,
+  target: { type, config },
+}: LinkData) => {
+  // TODO
+  const url =
+    type === "url"
+      ? config.url
+      : type === "email"
+        ? `mailto:${config.address}`
+        : linkEditionCtx.remoteURLSerializer.serialize(config.ref!)!;
+
+  editingLink.value?.onSubmit({
+    title: displayText,
+    url,
+  });
+
+  editingLink.value = null;
 };
 
 const blockNoteToUniAst = new BlockNoteToUniAstConverter(
@@ -159,8 +204,11 @@ const content =
     : uniAstToBlockNote.uniAstToBlockNote(uniAst);
 
 const blockNoteContainer = useTemplateRef<HTMLElement>("blocknote-container");
+const linkModalContainer = useTemplateRef<HTMLElement>("link-modal-container");
 
 const mountedBlockNote = ref<{ unmount: () => void }>();
+
+const editingLink = shallowRef<LinkEditionHandlerProps | null>(null);
 
 onMounted(() => {
   if (content instanceof Error) {
@@ -175,6 +223,8 @@ onMounted(() => {
     ...initializedEditorProps,
     content,
   });
+
+  window.addEventListener("mousedown", handleLinkEditorOutsideClick);
 });
 
 onBeforeUnmount(() => {
@@ -184,6 +234,10 @@ onBeforeUnmount(() => {
 
   mountedBlockNote.value.unmount();
 });
+
+onUnmounted(() => {
+  window.removeEventListener("mousedown", handleLinkEditorOutsideClick);
+});
 </script>
 
 <template>
@@ -192,6 +246,20 @@ onBeforeUnmount(() => {
   </h1>
 
   <div ref="blocknote-container" />
+
+  <div ref="link-modal-container" v-if="editingLink">
+    <LinkModal
+      :current="{
+        displayText: editingLink.current.title,
+        target: parseLinkTarget(
+          editingLink.current.url,
+          linkEditionCtx.remoteURLParser,
+        ),
+      }"
+      @submit="submitEditedLink"
+      @cancel="editingLink = null"
+    />
+  </div>
 </template>
 
 <style scoped>

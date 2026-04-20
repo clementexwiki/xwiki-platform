@@ -24,6 +24,7 @@ packages:
   - xwiki-platform-core/xwiki-platform-node/src/main/node/core/ds/api
   - xwiki-platform-core/xwiki-platform-node/src/main/node/core/fn-utils
   - xwiki-platform-core/xwiki-platform-node/src/main/node/core/icons
+  - xwiki-platform-core/xwiki-platform-node/src/main/node/core/link-modal/link-modal-ui
   - xwiki-platform-core/xwiki-platform-node/src/main/node/core/link-suggest/link-suggest-api
   - xwiki-platform-core/xwiki-platform-node/src/main/node/core/livedata/livedata-api
   - xwiki-platform-core/xwiki-platform-node/src/main/node/core/livedata/livedata-componentstore

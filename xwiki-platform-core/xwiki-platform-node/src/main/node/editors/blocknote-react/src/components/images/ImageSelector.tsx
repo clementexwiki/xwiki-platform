@@ -42,7 +42,7 @@ import { RiAttachmentLine } from "react-icons/ri";
 import type {
   LinkEditionContext,
   LinkSuggestion,
-} from "../../misc/linkSuggest";
+} from "../../misc/linkEditionCtx";
 
 export type ImageSelectorProps = {
   linkEditionCtx: LinkEditionContext;

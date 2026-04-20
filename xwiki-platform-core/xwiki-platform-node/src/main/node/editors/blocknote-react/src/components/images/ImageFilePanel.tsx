@@ -22,7 +22,7 @@ import { useEditor } from "../../hooks";
 import { Paper } from "@mantine/core";
 import { useCallback } from "react";
 import type { BlockOfType } from "../../blocknote";
-import type { LinkEditionContext } from "../../misc/linkSuggest";
+import type { LinkEditionContext } from "../../misc/linkEditionCtx";
 
 export type ImageFilePanelProps = {
   currentBlock: BlockOfType<"image">;

@@ -17,35 +17,10 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-import { ImageFilePanel } from "../images/ImageFilePanel";
-import type { EditorType } from "../../blocknote";
-import type { LinkEditionContext } from "../../misc/linkEditionCtx";
-import type React from "react";
 
-export type FilePanelProps = {
-  editor: EditorType;
-  blockId: string;
-  linkEditionCtx: LinkEditionContext;
-};
+import { generateConfigVue } from "@xwiki/platform-tool-viteconfig";
+import { UserConfig } from "vite";
 
-export const FilePanel: React.FC<FilePanelProps> = ({
-  blockId,
-  editor,
-  linkEditionCtx,
-}) => {
-  const block = editor.getBlock(blockId);
+const config: UserConfig = generateConfigVue(import.meta.url);
 
-  if (!block) {
-    throw new Error(
-      "Assertion failed: provided blockId was not found in editor (file panel)",
-    );
-  }
-
-  if (block.type === "image") {
-    return (
-      <ImageFilePanel linkEditionCtx={linkEditionCtx} currentBlock={block} />
-    );
-  }
-
-  throw new Error(`Assertion failed: unkown block type: ${block.type}`);
-};
+export default config;

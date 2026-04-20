@@ -24,6 +24,7 @@ import type { DocumentService } from "@xwiki/platform-document-api";
 import type {
   Link,
   LinkSuggestService,
+  LinkSuggestServiceProvider,
   LinkType,
 } from "@xwiki/platform-link-suggest-api";
 import type {
@@ -32,13 +33,19 @@ import type {
 } from "@xwiki/platform-model-api";
 import type {
   ModelReferenceHandler,
+  ModelReferenceHandlerProvider,
   ModelReferenceParser,
+  ModelReferenceParserProvider,
   ModelReferenceSerializer,
+  ModelReferenceSerializerProvider,
 } from "@xwiki/platform-model-reference-api";
 import type {
   RemoteURLParser,
+  RemoteURLParserProvider,
   RemoteURLSerializer,
+  RemoteURLSerializerProvider,
 } from "@xwiki/platform-model-remote-url-api";
+import type { Container } from "inversify";
 
 /**
  * @since 18.0.0RC1
@@ -76,6 +83,48 @@ type LinkSuggestion = {
  * @beta
  */
 type LinkSuggestor = (params: { query: string }) => Promise<LinkSuggestion[]>;
+
+function createLinkEditionContext(container: Container): LinkEditionContext {
+  const linkSuggestService = container
+    .get<LinkSuggestServiceProvider>("LinkSuggestServiceProvider")
+    .get();
+
+  const modelReferenceParser = container
+    .get<ModelReferenceParserProvider>("ModelReferenceParserProvider")
+    .get()!;
+
+  const modelReferenceSerializer = container
+    .get<ModelReferenceSerializerProvider>("ModelReferenceSerializerProvider")
+    .get()!;
+
+  const modelReferenceHandler = container
+    .get<ModelReferenceHandlerProvider>("ModelReferenceHandlerProvider")
+    .get()!;
+
+  const remoteURLParser = container
+    .get<RemoteURLParserProvider>("RemoteURLParserProvider")
+    .get()!;
+
+  const remoteURLSerializer = container
+    .get<RemoteURLSerializerProvider>("RemoteURLSerializerProvider")
+    .get()!;
+
+  const attachmentsService =
+    container.get<AttachmentsService>("AttachmentsService");
+
+  const documentService = container.get<DocumentService>("DocumentService")!;
+
+  return {
+    linkSuggestService: linkSuggestService ?? null,
+    modelReferenceParser,
+    modelReferenceSerializer,
+    modelReferenceHandler,
+    remoteURLParser,
+    remoteURLSerializer,
+    attachmentsService,
+    documentService,
+  };
+}
 
 /**
  * Build a function returning an array of link suggestions from a string.
@@ -151,5 +200,5 @@ function queryEqualityOperator(query: string) {
   };
 }
 
-export { createLinkSuggestor };
-export type { LinkEditionContext, LinkSuggestion, LinkSuggestor, LinkType };
+export { createLinkEditionContext, createLinkSuggestor };
+export type { LinkEditionContext, LinkSuggestion, LinkSuggestor };

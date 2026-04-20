@@ -24,7 +24,7 @@ import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { RiExternalLinkLine, RiPencilLine } from "react-icons/ri";
 import type { BlockOfType } from "../../blocknote";
-import type { LinkEditionContext } from "../../misc/linkSuggest";
+import type { LinkEditionContext } from "../../misc/linkEditionCtx";
 
 type CustomImageToolbarProps = {
   currentBlock: BlockOfType<"image">;

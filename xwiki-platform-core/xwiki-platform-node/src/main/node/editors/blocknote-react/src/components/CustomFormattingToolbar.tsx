@@ -40,7 +40,8 @@ import {
   useComponentsContext,
 } from "@blocknote/react";
 import type { ImageEditionOverrideFn } from "./images/CustomImageToolbar";
-import type { LinkEditionContext } from "../misc/linkSuggest";
+import type { LinkEditionContext } from "../misc/linkEditionCtx";
+import type { LinkEditionHandler } from "./links/linkEdition";
 import type {
   BlockTypeSelectItem,
   FormattingToolbarProps,
@@ -50,12 +51,18 @@ import type { JSX } from "react";
 type CustomFormattingToolbarProps = {
   formattingToolbarProps: FormattingToolbarProps;
   linkEditionCtx: LinkEditionContext;
+  linkEditionHandler: LinkEditionHandler;
   imageEditionOverrideFn?: ImageEditionOverrideFn;
 };
 
 export const CustomFormattingToolbar: React.FC<
   CustomFormattingToolbarProps
-> = ({ formattingToolbarProps, linkEditionCtx, imageEditionOverrideFn }) => {
+> = ({
+  formattingToolbarProps,
+  linkEditionCtx,
+  linkEditionHandler,
+  imageEditionOverrideFn,
+}) => {
   const Components = useComponentsContext()!;
 
   const editor = useEditor();
@@ -78,7 +85,7 @@ export const CustomFormattingToolbar: React.FC<
         // For others, simply show the "normal", default toolbar
         getDefaultFormattingToolbarItems(
           formattingToolbarProps.blockTypeSelectItems,
-          linkEditionCtx,
+          linkEditionHandler,
         )
       )}
     </Components.FormattingToolbar.Root>
@@ -87,7 +94,7 @@ export const CustomFormattingToolbar: React.FC<
 
 const getDefaultFormattingToolbarItems = (
   blockTypeSelectItems: BlockTypeSelectItem[] | undefined,
-  linkEditionCtx: LinkEditionContext,
+  linkEditorHandler: LinkEditionHandler,
 ): JSX.Element[] =>
   // NOTE: This should return **exactly** the same items as BlockNote's default toolbar
   // So, when BlockNote updates theirs, we should update ours
@@ -123,7 +130,7 @@ const getDefaultFormattingToolbarItems = (
     // But brings a custom popover to support XWiki references
     <CustomCreateLinkButton
       key={"createLinkButton"}
-      linkEditionCtx={linkEditionCtx}
+      linkEditionHandler={linkEditorHandler}
     />,
     <AddCommentButton key={"addCommentButton"} />,
     <AddTiptapCommentButton key={"addTiptapCommentButton"} />,

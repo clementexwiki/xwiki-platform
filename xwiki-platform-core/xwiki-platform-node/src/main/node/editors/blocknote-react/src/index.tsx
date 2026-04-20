@@ -22,7 +22,7 @@ import { MACRO_NAME_PREFIX } from "./blocknote/utils";
 import { createRoot } from "react-dom/client";
 import type { ContextForMacros } from "./blocknote/utils";
 import type { BlockNoteViewWrapperProps } from "./components/BlockNoteViewWrapper";
-import type { LinkEditionContext } from "./misc/linkSuggest";
+import type { LinkEditionContext } from "./misc/linkEditionCtx";
 
 /**
  * Mount a BlockNote editor inside a DOM container
@@ -98,3 +98,8 @@ export type {
   ImageEditionOverrideFn,
   ImageUpdateResult,
 } from "./components/images/CustomImageToolbar";
+
+export type {
+  LinkEditionHandler,
+  LinkEditionHandlerProps,
+} from "./components/links/linkEdition";

@@ -54,8 +54,9 @@ import type {
   BlockNoteConcreteMacro,
   ContextForMacros,
 } from "../blocknote/utils";
-import type { LinkEditionContext } from "../misc/linkSuggest";
+import type { LinkEditionContext } from "../misc/linkEditionCtx";
 import type { ImageEditionOverrideFn } from "./images/CustomImageToolbar";
+import type { LinkEditionHandler } from "./links/linkEdition";
 import type { BlockNoteEditorOptions } from "@blocknote/core";
 import type { Collaboration } from "@xwiki/platform-collaboration-api";
 import type { MacroWithUnknownParamsType } from "@xwiki/platform-macros-api";
@@ -155,6 +156,14 @@ type BlockNoteViewWrapperProps = {
   onChange?: (editor: EditorType) => void;
 
   /**
+   * Intercept link edition mechanism (i.e. inserting or editing a link)
+   *
+   * @since 18.3.0RC1
+   * @beta
+   */
+  linkEditionHandler: LinkEditionHandler;
+
+  /**
    * Link edition utilities
    */
   linkEditionCtx: LinkEditionContext;
@@ -193,6 +202,7 @@ const BlockNoteViewWrapper: React.FC<BlockNoteViewWrapperProps> = ({
   onChange,
   lang,
   linkEditionCtx,
+  linkEditionHandler,
   overrides,
   label,
   refs: { setEditor } = {},
@@ -309,6 +319,7 @@ const BlockNoteViewWrapper: React.FC<BlockNoteViewWrapperProps> = ({
           <CustomFormattingToolbar
             formattingToolbarProps={props}
             linkEditionCtx={linkEditionCtx}
+            linkEditionHandler={linkEditionHandler}
             imageEditionOverrideFn={overrides?.imageEdition}
           />
         )}
@@ -319,7 +330,7 @@ const BlockNoteViewWrapper: React.FC<BlockNoteViewWrapperProps> = ({
           <FormattingToolbar>
             <CustomLinkToolbar
               linkToolbarProps={props}
-              linkEditionCtx={linkEditionCtx}
+              linkEditionFn={linkEditionHandler}
             />
           </FormattingToolbar>
         )}

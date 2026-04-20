@@ -22,7 +22,7 @@ import { t } from "i18next";
 import { debounce } from "lodash-es";
 import { useCallback, useEffect, useState } from "react";
 import { RiLink } from "react-icons/ri";
-import type { LinkEditionContext, LinkSuggestion } from "../misc/linkSuggest";
+import type { LinkEditionContext, LinkSuggestion } from "../misc/linkEditionCtx";
 import type { KeyboardEvent, ReactElement } from "react";
 
 export type SearchBoxProps = {
