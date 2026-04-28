@@ -23,8 +23,8 @@ import { createLinkEditionContext } from "../components/linkEditionContext";
 import messages from "../translations";
 import { BlockNoteToUniAstConverter } from "../uniast/bn-to-uniast";
 import { UniAstToBlockNoteConverter } from "../uniast/uniast-to-bn";
-import { LinkModal, parseLinkTarget } from "@xwiki/link-modal-ui";
 import { mountBlockNote } from "@xwiki/platform-editors-blocknote-react";
+import { LinkModal, parseLinkTarget } from "@xwiki/platform-link-modal-ui";
 import { Container } from "inversify";
 import { debounce } from "lodash-es";
 import {
@@ -37,7 +37,6 @@ import {
   useTemplateRef,
 } from "vue";
 import { useI18n } from "vue-i18n";
-import type { LinkData } from "@xwiki/link-modal-ui";
 import type { AuthenticationManagerProvider } from "@xwiki/platform-authentication-api";
 import type {
   Collaboration,
@@ -49,6 +48,7 @@ import type {
   EditorType,
   LinkEditionHandlerProps,
 } from "@xwiki/platform-editors-blocknote-react";
+import type { LinkData } from "@xwiki/platform-link-modal-ui";
 import type { MacroWithUnknownParamsType } from "@xwiki/platform-macros-api";
 import type { UniAst } from "@xwiki/platform-uniast-api";
 

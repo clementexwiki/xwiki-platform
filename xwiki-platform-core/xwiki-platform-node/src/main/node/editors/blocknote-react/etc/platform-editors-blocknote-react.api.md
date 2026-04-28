@@ -73,6 +73,7 @@ export type BlockNoteViewWrapperProps = {
     } | false;
     collaboration?: Collaboration;
     onChange?: (editor: EditorType) => void;
+    linkEditionHandler: LinkEditionHandler;
     linkEditionCtx: LinkEditionContext;
     overrides?: {
         imageEdition?: ImageEditionOverrideFn;
@@ -724,6 +725,22 @@ export type LinkEditionContext = {
     remoteURLSerializer: RemoteURLSerializer;
     attachmentsService: AttachmentsService;
     documentService: DocumentService;
+};
+
+// @beta
+export type LinkEditionHandler = (props: LinkEditionHandlerProps) => void;
+
+// @beta
+export type LinkEditionHandlerProps = {
+    current: {
+        title: string;
+        url: string;
+    };
+    onSubmit: (link: {
+        title: string;
+        url: string;
+    }) => void;
+    mode: "createNew" | "editExisting";
 };
 
 // @beta
