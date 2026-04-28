@@ -22,10 +22,10 @@ import { t } from "i18next";
 import { debounce } from "lodash-es";
 import { useCallback, useEffect, useState } from "react";
 import { RiLink } from "react-icons/ri";
-import type { LinkEditionContext, LinkSuggestion } from "../misc/linkEditionCtx";
+import type { LinkEditionContext, LinkType } from "../misc/linkEditionCtx";
 import type { KeyboardEvent, ReactElement } from "react";
 
-export type SearchBoxProps = {
+type SearchBoxProps = {
   /**
    * The search box's initial value
    */
@@ -72,6 +72,18 @@ export type SearchBoxProps = {
    * e.g. when the user uses the `<Enter>` key on an URL
    */
   onSubmit: (url: string) => void;
+};
+
+/**
+ * @since 18.3.0RC-1
+ * @beta
+ */
+type LinkSuggestion = {
+  title: string;
+  segments: string[];
+  reference: string;
+  url: string;
+  type: LinkType;
 };
 
 /**
@@ -262,3 +274,5 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
     </Combobox>
   );
 };
+
+export type { LinkSuggestion, SearchBoxProps };

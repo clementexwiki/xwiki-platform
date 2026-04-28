@@ -39,10 +39,8 @@ import {
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { RiAttachmentLine } from "react-icons/ri";
-import type {
-  LinkEditionContext,
-  LinkSuggestion,
-} from "../../misc/linkEditionCtx";
+import type { LinkEditionContext } from "../../misc/linkEditionCtx";
+import type { LinkSuggestion } from "../SearchBox";
 
 export type ImageSelectorProps = {
   linkEditionCtx: LinkEditionContext;
