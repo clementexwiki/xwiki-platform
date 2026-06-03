@@ -66,11 +66,6 @@
     "react-i18next": "catalog:",
     "react-icons": "catalog:"
   },
-  "peerDependencies": {
-    "y-prosemirror": "catalog:",
-    "y-protocols": "catalog:",
-    "yjs": "catalog:"
-  },
   "devDependencies": {
     "@microsoft/api-extractor": "catalog:",
     "@playwright/experimental-ct-react": "catalog:",
@@ -89,10 +84,7 @@
     "typescript": "catalog:",
     "vite": "catalog:",
     "vitest": "catalog:",
-    "vue-tsc": "catalog:",
-    "y-prosemirror": "catalog:",
-    "y-protocols": "catalog:",
-    "yjs": "catalog:"
+    "vue-tsc": "catalog:"
   },
   "publishConfig": {
     "exports": {
